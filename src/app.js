@@ -376,7 +376,7 @@ $('#geoClick').on('click', function () {
         query = "imperial";
     };
     try {
-        var getIP = 'https://ip-api.com/json/';
+        var getIP = 'http://ip-api.com/json/';
         let openWeatherMap = 'https://api.openweathermap.org/data/2.5/forecast'
         $.getJSON(getIP).done(function (location) {
             $.getJSON(openWeatherMap, {
