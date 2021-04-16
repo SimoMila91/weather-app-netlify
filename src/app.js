@@ -458,6 +458,7 @@ let requestCity = async (c) => {
         console.log(err);
         if (err.response.status === 404) {
             $('.hide').css('display', 'block');
+            localStorage.setItem('city', 'Turin');
         }
     };
 };
