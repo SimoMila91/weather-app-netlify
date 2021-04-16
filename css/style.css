@@ -45,6 +45,7 @@ body {
     top: 140px;
     left: 14%;
     width: 600px;
+    margin-left: 3px;
 }
 .geolocation {
     font-family: 'Share Tech', sans-serif;
