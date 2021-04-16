@@ -4,19 +4,12 @@
   "description": "Weather app ",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1".
+    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "parcel index.html",
     "build": "parcel build index.html"
   },
   "author": "Simone Milanesio",
   "license": "ISC",
-  "dependencies": {
-    "axios": "^0.21.1",
-    "chart.js": "^2.9.4",
-    "chartjs-plugin-datalabels": "^1.0.0",
-    "jquery": "^3.6.0",
-    "mdbootstrap": "^4.19.2"
-  },
   "devDependencies": {
     "parcel-bundler": "^1.12.5"
   }
