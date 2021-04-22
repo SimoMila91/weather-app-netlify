@@ -37,7 +37,6 @@ Chart.helpers.merge(Chart.defaults.global, {
   }
 });
 
-// geolocation
 $(document).ready(() => {
   if (screenWidth == 1024 || screenWidth < 1024) {
     $('#form').removeClass('col-lg-6').addClass('col-lg-12');
@@ -54,6 +53,8 @@ $(document).ready(() => {
   let now = new Date();
   let data = now.toLocaleDateString(undefined, options);
   textDate.text(data);
+  let year = now.getFullYear();
+  $('#year').text(year);
   let cityLocal = localStorage.getItem('city');
   if (cityLocal) {
     requestCity(cityLocal);
@@ -64,7 +65,7 @@ $(document).ready(() => {
 
 });
 
-// display result function
+// display result function 
 let displayResult = (data, i) => {
   let kpm;
   let temperature = Math.round(data.list[i].main.temp);
@@ -92,6 +93,7 @@ let displayResult = (data, i) => {
     $('#unitType').text(' F°');
     $('#secUnitType').text(' F°');
   };
+
   let humResp = data.list[i].main.humidity;
   let lastClass = humIcon.attr('class').split(' ').pop();
   let idTemp = data.list[i].weather[0].id;
@@ -160,7 +162,6 @@ let showForecast = (data) => {
   let dataTemp = [];
   let label = [];
 
-
   for (let i = 0; i < data.list.length; i += 8) {
     day.push(data.list[i].dt_txt.slice(8, 10));
   };
@@ -172,27 +173,26 @@ let showForecast = (data) => {
   }
   daysSorted.unshift(days[now.getDay()]);
   for (let i = 0; i < data.list.length; i++) {
+    let search = data.list[i].dt_txt.slice(8, 10);
     if (nowHour < 23) {
-      let search = data.list[i].dt_txt.slice(8, 10);
       let hour = data.list[i].dt_txt.slice(11, 13);
-      if (search.includes(today)) {
+      if (search.includes(day[0])) {
         todayMax.push(data.list[i].main.temp_max);
         if (nowHour == hour || hour == (nowHour + 1) || hour == (nowHour + 2)) {
           icon.push(data.list[i].weather[0].id);
         }
-      } else if (search.includes(today + 1)) {
+      } else if (search.includes(day[1])) {
         secondDay.push(data.list[i].main.temp);
-      } else if (search.includes(today + 2)) {
+      } else if (search.includes(day[2])) {
         thirdDay.push(data.list[i].main.temp);
-      } else if (search.includes(today + 3)) {
+      } else if (search.includes(day[3])) {
         fourthDay.push(data.list[i].main.temp);
-      } else if (search.includes(today + 4)) {
+      } else if (search.includes(day[4])) {
         fifthDay.push(data.list[i].main.temp);
       }
       for (let i = 0; i < data.list.length; i++) {
-        let search = data.list[i].dt_txt.slice(8, 10);
         let hour = data.list[i].dt_txt.slice(11, 13);
-        if (hour == 12 && !search.includes(today)) {
+        if (hour == 12 && !search.includes(day[0])) {
           icon.push(data.list[i].weather[0].id);
         }
       };
@@ -208,7 +208,7 @@ let showForecast = (data) => {
 
   for (let i = 0; i < data.list.length; i++) {
     let search = data.list[i].dt_txt.slice(8, 10);
-    if (search.includes(today)) {
+    if (search.includes(day[0])) {
       dataTemp.push(data.list[i].main.temp);
       label.push(data.list[i].dt_txt.slice(11, 16));
     };
@@ -231,10 +231,10 @@ let showForecast = (data) => {
   for (let i = 0; i <= 4; i++) {
     $('#boxForecast').append(
       `<div id="${day[i]}" class="box">
-                <span>${daysSorted[i]}</span><br>
-                <img id="wicon" src="${getFiveWeatherIcon(icon[i])}" height="40px" alt="weather icon"><br>
-                <span><span class="strong">${minMax[i][0]}</span>/ ${minMax[i][1]}</span>
-            </div>`
+              <span>${daysSorted[i]}</span><br>
+              <img id="wicon" src="${getFiveWeatherIcon(icon[i])}" height="40px" alt="weather icon"><br>             
+              <span><span class="strong">${minMax[i][0]}</span>/ ${minMax[i][1]}</span>
+          </div>`
     )
   };
 
@@ -250,11 +250,12 @@ let showForecast = (data) => {
   $('.box:first').addClass('myClickState');
 
   let myChart = $('#myChart');
+  Chart.plugins.unregister(ChartDataLabels);
   let myLineChart = new Chart(myChart, {
     plugins: [ChartDataLabels],
     type: 'line',
     data: {
-      // da sistemare colori
+      // da sistemare colori 
       datasets: [{
         label: 'Temperature',
         data: dataTemp,
@@ -272,6 +273,19 @@ let showForecast = (data) => {
       labels: label
     },
     options: {
+      aspectRatio: 4 / 3,
+      tooltips: false,
+      layout: {
+        padding: {
+          top: 20,
+          right: 14,
+        }
+      },
+      elements: {
+        line: {
+          fill: false
+        }
+      },
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
@@ -279,14 +293,15 @@ let showForecast = (data) => {
           backgroundColor: function (context) {
             return context.dataset.backgroundColor;
           },
-          borderRadius: 4,
+          borderRadius: 3,
           color: 'black',
           font: {
-            size: 14,
+            size: 15,
             weight: 'bold'
           },
           formatter: Math.round
-        }
+        },
+        legend: false
       },
       scales: {
         xAxes: [{
@@ -371,39 +386,45 @@ let myClickBtnFunction = (data) => {
       };
     };
   });
-}
+};
 
-/*$('#geoClick').on('click', function () {
+$('#geoClick').on('click', function () {
   let query;
   if ($('#btnCel').hasClass('btn-click')) {
     query = "metric";
   } else {
     query = "imperial";
   };
-  try {
-    var getIP = 'http://ip-api.com/json/';
-    let openWeatherMap = 'https://api.openweathermap.org/data/2.5/forecast'
-    $.getJSON(getIP).done(function (location) {
-      $.getJSON(openWeatherMap, {
-        lat: location.lat,
-        lon: location.lon,
-        units: query,
-        APPID: api
-      }).done(function (weather) {
-        tmpBtn.empty();
-        $('#boxForecast').empty();
-        displayResult(weather, 0);
-        showForecast(weather);
-        localStorage.removeItem('city');
-        localStorage.setItem('city', weather.city.name);
-      })
+
+  if ('geolocation' in navigator) {
+    navigator.geolocation.getCurrentPosition(position => {
+      let lat = position.coords.latitude;
+      let lon = position.coords.longitude;
+      let pos = "https://api.openweathermap.org/data/2.5/forecast?lat=" +
+        lat + "&lon=" + lon + "&units=" + query + "&appid=" + api;
+      axios.get(pos)
+        .then(res => res.data)
+        .then(data => {
+          tmpBtn.empty();
+          $('#boxForecast').empty();
+          displayResult(data, 0);
+          showForecast(data);
+          localStorage.removeItem('city');
+          localStorage.setItem('city', data.city.name);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }, (err) => {
+      // if the user doesn't allow geolocation I show the weather of New York. 
+      if (err.code == err.PERMISSION_DENIED) {
+        console.log("You denied me :-(");
+        requestCity("Turin");
+        localStorage.setItem('city', 'Turin');
+      }
     });
-  } catch (error) {
-    requestCity("Turin");
-    localStorage.setItem('city', 'Turin');
   };
 });
-*/
 
 
 let addData = (chart, label, data) => {
@@ -420,7 +441,7 @@ let removeData = (chart) => {
   chart.update();
 };
 
-// write and search a city
+// write and search a city 
 
 $("#submitForm").on('click', function (e) {
   let input = $('#inputForm');
@@ -445,7 +466,7 @@ $('.btn-type').on('click', function () {
   requestCity(city);
 });
 
-// search city function
+// search city function 
 let requestCity = async (c) => {
   let query;
   if ($('#btnCel').hasClass('btn-click')) {
@@ -459,17 +480,17 @@ let requestCity = async (c) => {
     tmpBtn.empty();
     displayResult(resp.data, 0);
     showForecast(resp.data);
+    console.log(resp.data);
     $('.hide').css('display', 'none');
   } catch (err) {
     console.log(err);
     if (err.response.status === 404) {
       $('.hide').css('display', 'block');
-      localStorage.setItem('city', 'Turin');
     }
   };
 };
 
-// I want to use this control function to return different day's images.
+// I want to use this control function to return different day's images. 
 
 let dayTime = (sys) => {
   if (sys.includes('d')) {
@@ -479,7 +500,7 @@ let dayTime = (sys) => {
   }
 };
 
-// date function
+// date function 
 
 let dateBuilder = (weekDay, date, m, year) => {
   let response;
@@ -553,7 +574,7 @@ let dateBuilder = (weekDay, date, m, year) => {
   textDate.text(response);
 };
 
-// function to get direction of wind
+// function to get direction of wind 
 let getDirection = angle => {
   var directions = ['N', 'NW', 'W', 'SW', 'S', 'SE', 'E', 'NE'];
   return directions[Math.round(((angle %= 360) < 0 ? angle + 360 : angle) / 45) % 8];
