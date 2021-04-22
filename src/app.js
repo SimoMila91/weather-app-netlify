@@ -476,11 +476,11 @@ let requestCity = async (c) => {
   };
   try {
     const resp = await axios.get(uri + c + query);
+    console.log(resp.data);
     $('#boxForecast').empty();
     tmpBtn.empty();
     displayResult(resp.data, 0);
     showForecast(resp.data);
-    console.log(resp.data);
     $('.hide').css('display', 'none');
   } catch (err) {
     console.log(err);
