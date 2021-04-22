@@ -198,7 +198,7 @@ let showForecast = (data) => {
       };
     } else {
       icon.push(data.list[0].weather[0].id);
-      //today.push([data.list[0].main.temp_max, data.list[7].main.temp_min]);
+      today.push([data.list[0].main.temp_max, data.list[7].main.temp_min]);
       secondDay.push([data.list[8].main.temp, data.list[15].main.temp]);
       thirdDay.push([data.list[16].main.temp, data.list[23].main.temp]);
       fourthDay.push([data.list[24].main.temp, data.list[31].main.temp]);
