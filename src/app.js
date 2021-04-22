@@ -1,4 +1,4 @@
-import API_KEY from './apikey.js'
+import API_KEY from './apikey.js';
 Chart.plugins.unregister(ChartDataLabels);
 
 const api = API_KEY;
@@ -348,7 +348,6 @@ let showForecast = (data) => {
             displayResult(data, 0);
           }
         };
-
       };
       dataTempControl(dataTemp);
       scrollMobile(label);
@@ -388,7 +387,7 @@ let myClickBtnFunction = (data) => {
   });
 };
 
-$('#geoClick').on('click', function () {
+/*$('#geoClick').on('click', function () {
   let query;
   if ($('#btnCel').hasClass('btn-click')) {
     query = "metric";
@@ -425,6 +424,7 @@ $('#geoClick').on('click', function () {
     });
   };
 });
+*/
 
 
 let addData = (chart, label, data) => {
