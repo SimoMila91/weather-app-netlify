@@ -195,7 +195,7 @@ let showForecast = (data) => {
         if (hour == 12 && !search.includes(day[0])) {
           icon.push(data.list[i].weather[0].id);
         }
-      };
+      }
     } else {
       icon.push(data.list[0].weather[0].id);
       today.push([data.list[0].main.temp, data.list[7].main.temp]);
@@ -203,7 +203,7 @@ let showForecast = (data) => {
       thirdDay.push([data.list[16].main.temp, data.list[23].main.temp]);
       fourthDay.push([data.list[24].main.temp, data.list[31].main.temp]);
       fifthDay.push([data.list[32].main.temp, data.list[39].main.temp]);
-    };
+    }
   };
 
   for (let i = 0; i < data.list.length; i++) {
@@ -211,7 +211,7 @@ let showForecast = (data) => {
     if (search.includes(day[0])) {
       dataTemp.push(data.list[i].main.temp);
       label.push(data.list[i].dt_txt.slice(11, 16));
-    };
+    }
   };
 
   minMax.push([Math.round(Math.max(...todayMax)) + "°", Math.round(Math.min(...todayMax)) + "°"]);
@@ -328,7 +328,7 @@ let showForecast = (data) => {
     if (!$(this).hasClass("myClickState")) {
       $(".box").removeClass("myClickState");
       $(this).addClass("myClickState");
-    };
+    }
     if ($(this).hasClass("myClickState")) {
       let weekDay = $(this).find('span:first').text();
 
@@ -347,7 +347,7 @@ let showForecast = (data) => {
           } else if (data.list[i].dt_txt.slice(11, 13) != '00' && id == today) {
             displayResult(data, 0);
           }
-        };
+        }
       };
       dataTempControl(dataTemp);
       scrollMobile(label);
@@ -355,7 +355,7 @@ let showForecast = (data) => {
         tmpBtn.append(
           `<div class="box-btn">${label[i]}</div>`
         )
-      };
+      }
 
       myClickBtnFunction(data);
       if (nowHour > 18 && nowHour < 23 && today == id) {
@@ -378,12 +378,12 @@ let myClickBtnFunction = (data) => {
     if (!$(this).hasClass('myClickBtn')) {
       $('.box-btn').removeClass('myClickBtn');
       $(this).addClass('myClickBtn');
-    };
+    }
     for (let i = 0; i < data.list.length; i++) {
       if (data.list[i].dt_txt.slice(8, 10) == id && data.list[i].dt_txt.slice(11, 16) == hour) {
         displayResult(data, i);
-      };
-    };
+      }
+    }
   });
 };
 
